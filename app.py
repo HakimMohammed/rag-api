@@ -18,6 +18,10 @@ def get_settings():
 def welcome():
     return {"message":"Welcome to FastAPI"}
 
+@app.get("/health")
+def health():
+    return {"status":"ok"}
+
 @app.post("/query")
 def queryChroma(query: str, settings: Annotated[config.Settings, Depends(get_settings)]):
     results = collection.query(query_texts=[query], n_results=1)
@@ -32,5 +36,18 @@ def queryChroma(query: str, settings: Annotated[config.Settings, Depends(get_set
 
 @app.post("/add")
 def addKnowledge(text: str):
-    collection.add(documents=[text], ids=[str(uuid.UUID)])
-    return {"status":"ok"}
+    """Add new content to the knowledge base dynamically."""
+    try:
+        id = str(uuid.uuid4())
+        collection.add(documents=[text], ids=[id])
+        
+        return {
+            "status": "success",
+            "message": "Knowledge Base has been updated",
+            "id": id
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error", "message": str(e)
+        }
