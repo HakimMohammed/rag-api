@@ -18,21 +18,12 @@ def queryChroma(query: str):
     
     answer = ollama.generate(
         model="tinyllama",
-        prompt=f"""
-        Context:
-        {context}
-        
-        
-        Question:
-        {query}
-        
-        Answer clearly and precisely:
-        """
+        prompt=f"\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer clearly and precisely:"
     )
     
     return {"answer": answer["response"]}
 
 @app.post("/add")
 def addKnowledge(text: str):
-    collection.add(documents=[text], ids=[uuid.UUID])
+    collection.add(documents=[text], ids=[str(uuid.UUID)])
     return {"status":"ok"}
