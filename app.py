@@ -5,10 +5,16 @@ import uuid
 from functools import lru_cache
 import config
 from typing import Annotated
+import logging
 
 app = FastAPI()
 client = chromadb.PersistentClient(path="./db")
 collection = client.get_collection("docs")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s"
+)
 
 @lru_cache
 def get_settings():
@@ -24,6 +30,9 @@ def health():
 
 @app.post("/query")
 def queryChroma(query: str, settings: Annotated[config.Settings, Depends(get_settings)]):
+    
+    logging.info(f"/query asked: {query}")
+    
     results = collection.query(query_texts=[query], n_results=1)
     context = results["documents"][0][0] if results["documents"] else ""
     
@@ -37,6 +46,9 @@ def queryChroma(query: str, settings: Annotated[config.Settings, Depends(get_set
 @app.post("/add")
 def addKnowledge(text: str):
     """Add new content to the knowledge base dynamically."""
+    
+    logging.info(f"/add received new information: {text}")
+    
     try:
         id = str(uuid.uuid4())
         collection.add(documents=[text], ids=[id])
