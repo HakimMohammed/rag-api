@@ -6,6 +6,10 @@ app = FastAPI()
 client = chromadb.PersistentClient(path="./db")
 collection = client.get_collection("docs")
 
+@app.get("/")
+def welcome():
+    return {"message":"Welcome to FastAPI"}
+
 @app.get("/query")
 def queryChroma(query: str):
     results = collection.query(query_texts=[query], n_results=1)
