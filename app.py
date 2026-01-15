@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import chromadb
 import ollama
+import uuid
 
 app = FastAPI()
 client = chromadb.PersistentClient(path="./db")
@@ -30,3 +31,8 @@ def queryChroma(query: str):
     )
     
     return {"answer": answer["response"]}
+
+@app.post("/add")
+def addKnowledge(text: str):
+    collection.add(documents=[text], ids=[uuid.UUID])
+    return {"status":"ok"}
