@@ -3,3 +3,6 @@ venv/
 
 # generated vectors
 db/
+
+# cache
+__pycache__/
