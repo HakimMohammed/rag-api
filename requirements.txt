@@ -2,3 +2,4 @@ fastapi
 uvicorn
 chormadb
 ollama
+pydantic_settings
