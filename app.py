@@ -10,7 +10,7 @@ collection = client.get_collection("docs")
 def welcome():
     return {"message":"Welcome to FastAPI"}
 
-@app.get("/query")
+@app.post("/query")
 def queryChroma(query: str):
     results = collection.query(query_texts=[query], n_results=1)
     context = results["documents"][0][0] if results["documents"] else ""
