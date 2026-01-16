@@ -4,8 +4,8 @@ on:
   push:
     paths:
       - 'app/app.py'
-      - 'app/k8s.txt'
-      - 'app/embed.py'
+      - 'app/embed_docs.py'
+      - 'app/docs/**'
 
 jobs:
   test-and-build:
@@ -26,8 +26,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build Embeddings
-        run: |
-          python app/embed.py
+        run: python app/embed_docs.py # Changed from embed.py to embed_docs.py
 
       - name: Start API in mock mode
         run: |
