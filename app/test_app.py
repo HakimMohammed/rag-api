@@ -25,6 +25,7 @@ def test_query():
     
     assert "open-source" in answer
     assert "containerized" in answer
+    assert "self-healing" in answer
     
 def test_add_knowledge():
     response = client.post(

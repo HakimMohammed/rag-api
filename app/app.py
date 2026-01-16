@@ -20,7 +20,7 @@ logging.info(f"Using Model: {MODEL_NAME}")
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 ollama_client = ollama.Client(host=OLLAMA_HOST)
 
-use_mock = os.getenv("MOCK_MODE", "1") == "1"
+use_mock = os.getenv("MOCK_MODE", "0") == "1"
 logging.info(f"Mock Mode Activated: {use_mock}")
 
 @app.get("/")
