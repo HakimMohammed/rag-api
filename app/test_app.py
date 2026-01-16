@@ -15,7 +15,7 @@ def test_welcome():
         "message":"Welcome to FastAPI"
     }
     
-def test_query():
+def test_kubernetes_query():
     response = client.post(
         "/query",
         params={"query": "What is Kubernetes ?"}
@@ -23,9 +23,22 @@ def test_query():
     
     answer = response.json()["answer"]
     
-    assert "open-source" in answer
-    assert "containerized" in answer
-    assert "self-healing" in answer
+    assert "open-source" in answer, "Missing 'open-source' in answer"
+    assert "containerized" in answer, "Missing 'containerized' in answer"
+    assert "self-healing" in answer, "Missing 'self-healing' in answer"
+
+def test_nextwork_query():
+    response = client.post(
+        "/query",
+        params={"query": "What is Nextwork ?"}
+    )
+    
+    answer = response.json()["answer"]
+    
+    assert "best" in answer, "Missing 'best' in answer"
+    assert "learning" in answer, "Missing 'learning' in answer"
+    assert "showcasing" in answer, "Missing 'showcasing' in answer"
+    # assert "maximus" in answer, "Missing 'maximus' in answer" # Certain to FAIL
     
 def test_add_knowledge():
     response = client.post(
