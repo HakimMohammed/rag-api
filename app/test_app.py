@@ -38,7 +38,7 @@ def test_nextwork_query():
     assert "best" in answer, "Missing 'best' in answer"
     assert "learning" in answer, "Missing 'learning' in answer"
     assert "showcasing" in answer, "Missing 'showcasing' in answer"
-    # assert "maximus" in answer, "Missing 'maximus' in answer" # Certain to FAIL
+    assert "maximus" in answer, "Missing 'maximus' in answer" # Certain to FAIL
     
 def test_add_knowledge():
     response = client.post(
