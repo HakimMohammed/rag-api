@@ -2,3 +2,5 @@ fastapi
 uvicorn
 chromadb
 ollama
+httpx
+pytest
