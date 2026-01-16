@@ -23,4 +23,4 @@ for filename in os.listdir("app/docs/"):
             doc_id = filename[:-4]
             collection.add(documents=[text], ids=[doc_id])
 
-print("Embedded all documents from app/docs/ into ChromaDB.")
+print("Embedded all documents from app/docs/ into ChromaDB")
