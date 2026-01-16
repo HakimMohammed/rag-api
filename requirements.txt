@@ -1,5 +1,4 @@
 fastapi
 uvicorn
-chormadb
+chromadb
 ollama
-pydantic_settings

@@ -1,0 +1,14 @@
+# venv
+venv/
+
+# git
+.git/
+.gitignore
+
+# resources
+images/
+__pycache__/
+db/
+
+# docs
+README.md

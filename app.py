@@ -1,11 +1,9 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 import chromadb
 import ollama
 import uuid
-from functools import lru_cache
-import config
-from typing import Annotated
 import logging
+import os
 
 app = FastAPI()
 client = chromadb.PersistentClient(path="./db")
@@ -16,9 +14,11 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s"
 )
 
-@lru_cache
-def get_settings():
-    return config.Settings()
+MODEL_NAME = os.getenv("MODEL_NAME", "tinyllama")
+logging.info(f"Using Model: {MODEL_NAME}")
+
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+ollama_client = ollama.Client(host=OLLAMA_HOST)
 
 @app.get("/")
 def welcome():
@@ -29,19 +29,24 @@ def health():
     return {"status":"ok"}
 
 @app.post("/query")
-def queryChroma(query: str, settings: Annotated[config.Settings, Depends(get_settings)]):
+def queryChroma(query: str):
     
     logging.info(f"/query asked: {query}")
     
     results = collection.query(query_texts=[query], n_results=1)
     context = results["documents"][0][0] if results["documents"] else ""
     
-    answer = ollama.generate(
-        model=settings.model_name,
-        prompt=f"\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer clearly and precisely:"
-    )
+    try:
     
-    return {"answer": answer["response"]}
+        answer = ollama_client.generate(
+            model=MODEL_NAME,
+            prompt=f"\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer clearly and precisely:"
+        )
+        
+        return {"answer": answer["response"]}
+    except Exception as e:
+        return {"error": str(e)}
+    
 
 @app.post("/add")
 def addKnowledge(text: str):
