@@ -18,6 +18,7 @@ MODEL_NAME = os.getenv("MODEL_NAME", "tinyllama")
 logging.info(f"Using Model: {MODEL_NAME}")
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+logging.info(f"Using Ollama Host: {OLLAMA_HOST}")
 ollama_client = ollama.Client(host=OLLAMA_HOST)
 
 use_mock = os.getenv("MOCK_MODE", "0") == "1"
