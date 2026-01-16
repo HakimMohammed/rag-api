@@ -20,6 +20,9 @@ logging.info(f"Using Model: {MODEL_NAME}")
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 ollama_client = ollama.Client(host=OLLAMA_HOST)
 
+use_mock = os.getenv("MOCK_MODE", "1") == "1"
+logging.info(f"Mock Mode Activated: {use_mock}")
+
 @app.get("/")
 def welcome():
     return {"message":"Welcome to FastAPI"}
@@ -30,23 +33,24 @@ def health():
 
 @app.post("/query")
 def queryChroma(query: str):
-    
+
     logging.info(f"/query asked: {query}")
-    
+
     results = collection.query(query_texts=[query], n_results=1)
     context = results["documents"][0][0] if results["documents"] else ""
     
-    try:
-    
-        answer = ollama_client.generate(
-            model=MODEL_NAME,
-            prompt=f"\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer clearly and precisely:"
-        )
-        
-        return {"answer": answer["response"]}
-    except Exception as e:
-        return {"error": str(e)}
-    
+    if use_mock:
+        return {"answer": context}
+    else:
+        try:
+            answer = ollama_client.generate(
+                model=MODEL_NAME,
+                prompt=f"\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer clearly and precisely:"
+            )
+
+            return {"answer": answer["response"]}
+        except Exception as e:
+            return {"error": str(e)}
 
 @app.post("/add")
 def addKnowledge(text: str):
